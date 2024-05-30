@@ -2,18 +2,28 @@ const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const app = express()
+const indexRouter = require('./routes/index')
 
 require('dotenv').config()
+
+const app = express()
+
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json()) //req.body가 객체로 인식이 된다.
 
+app.use('/api', indexRouter)
+// /api/user
+
 const mongoURI = process.env.LOCAL_DB_ADDRESS
 mongoose
    .connect(mongoURI, { useNewUrlParser: true })
-   .then(() => console.log('mongoose connected'))
-   .catch((err) => console.log('DB connection fail', err))
+   .then(() => {
+      console.log('mongoose connected')
+   })
+   .catch((err) => {
+      console.log('DB connection fail', err)
+   })
 
 app.listen(process.env.PORT || 4500, () => {
    console.log('server on')
